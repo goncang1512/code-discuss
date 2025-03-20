@@ -24,7 +24,7 @@ export const auth = betterAuth({
 				defaultValue: 'avatar',
 				required: false
 			},
-			avatar_id: {
+			avatarId: {
 				type: 'string',
 				input: true,
 				defaultValue: 'default_id',
@@ -33,3 +33,5 @@ export const auth = betterAuth({
 		}
 	}
 });
+
+export type Session = typeof auth.$Infer.Session;

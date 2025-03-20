@@ -1,10 +1,26 @@
+import type { auth } from '@lib/auth';
 import type { ActionResult } from '@sveltejs/kit';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type UserType = {
+export type User = typeof auth.$Infer.Session.user;
+
+export type QuestionType = {
+	user: {
+		avatar: string | null;
+		name: string | null;
+		image: string | null;
+		id: string;
+	};
+} & {
 	id: string;
-	name: string;
-	email: string;
+	createdAt: Date;
+	updatedAt: Date;
+	userId: string;
+	content: string;
+	tags: string[];
+	upvotes: string[];
+	downvotes: string[];
+	is_accepted: boolean;
 };
 
 export type EnhanceFunction = (
@@ -27,13 +43,13 @@ interface ActionURL {
 	username: string;
 }
 
-export type EnanceType = {
+export type EnhanceType = {
 	formElement: HTMLFormElement;
 	formData: FormData;
 	action: ActionURL;
 };
 
-export type ReturnEnanceType = {
+export type ReturnEnhanceType = {
 	result: ActionResult<Record<string, unknown> | undefined, Record<string, unknown> | undefined>;
 	update: (options?: { reset?: boolean; invalidateAll?: boolean }) => void;
 };

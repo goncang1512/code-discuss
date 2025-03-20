@@ -2,7 +2,8 @@
 	import { Button } from 'flowbite-svelte';
 	import InputFloat from '@components/fragments/InputFloat.svelte';
 	import { authClient } from '@lib/auth-client';
-	import { goto } from '$app/navigation';
+	import SocialAuth from '@components/fragments/SocialAuth.svelte';
+	import InputPassword from '@components/fragments/InputPassword.svelte';
 
 	let loading = $state(false);
 	let message = $state('');
@@ -16,16 +17,11 @@
 			{
 				email: formData.get('email') as string,
 				password: formData.get('password') as string,
-				callbackURL: '/'
+				callbackURL: '/profile'
 			},
 			{
 				onRequest: () => {
 					loading = true;
-				},
-				onSuccess: () => {
-					loading = false;
-					form.reset();
-					goto('/');
 				},
 				onError: (ctx: { error: { message: string } }) => {
 					loading = false;
@@ -38,14 +34,20 @@
 
 <div class="flex h-screen w-screen items-center justify-center px-3 md:px-0">
 	<div class="w-md rounded-md border border-gray-100 p-3 shadow-md">
+		<h1 class="pb-3 text-2xl font-semibold text-black">Sign In</h1>
+		<SocialAuth />
+		<div class="flex w-full items-center gap-2">
+			<hr class="w-full text-gray-300" />
+			<p class="text-gray-400">OR</p>
+			<hr class="w-full text-gray-300" />
+		</div>
 		<form onsubmit={handleLogin} class="flex flex-col gap-4">
 			<p class="text-center text-red-500 italic">{message}</p>
-			<h1 class="text-2xl font-semibold text-black">Login</h1>
 			<InputFloat name="email" type="email" required>Email</InputFloat>
 			<InputFloat name="password" type="password" required>Password</InputFloat>
 
 			<Button color="dark" class="cursor-pointer" type="submit" disabled={loading}
-				>{loading ? 'Loading...' : 'Login'}</Button
+				>{loading ? 'Loading...' : 'Sign in'}</Button
 			>
 		</form>
 		<p class="pt-3 text-center">
