@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { useSession } from '@lib/context/userContext';
 	import type { EnhanceType, ReturnEnhanceType } from '@lib/utils/types';
+	import InputFloat from '@components/fragments/InputFloat.svelte';
 	import { X } from '@lucide/svelte';
 	import { Button } from 'flowbite-svelte';
 
@@ -11,6 +12,7 @@
 	let tagInput = $state('');
 	let loading = $state(false);
 	let message = $state();
+	let inputRef: HTMLInputElement;
 
 	const deleteTag = (tag_name: string) => {
 		tags = tags.filter((t) => t !== tag_name);
@@ -34,6 +36,14 @@
 			update();
 		};
 	};
+
+	function addTag() {
+		if (tagInput.trim() !== '') {
+			tags.push(tagInput);
+			tagInput = '';
+			inputRef.focus(); // Fokus kembali ke input setelah tombol diklik
+		}
+	}
 </script>
 
 {#if message}
@@ -41,10 +51,11 @@
 {/if}
 <form
 	method="POST"
-	action="/?/question"
+	action="?/question"
 	use:enhance={handleEnhance}
-	class="flex flex-col gap-2 border-b border-gray-200 p-3"
+	class="flex flex-col gap-2 border-b border-gray-200 p-4"
 >
+	<InputFloat name="title" type="text">Title</InputFloat>
 	<textarea
 		id="message"
 		name="content"
@@ -56,19 +67,13 @@
 		<input
 			type="text"
 			bind:value={tagInput}
+			bind:this={inputRef}
 			id="first_name"
 			name="tags"
 			class="block w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-zinc-600 focus:ring-zinc-600"
 			placeholder="javascript"
 		/>
-		<Button
-			type="button"
-			color="dark"
-			onclick={() => {
-				tags.push(tagInput);
-				tagInput = '';
-			}}>Tag</Button
-		>
+		<Button type="button" color="dark" onclick={addTag}>Tag</Button>
 	</div>
 	<div class="flex flex-wrap gap-2">
 		{#each tags as tag}

@@ -28,10 +28,20 @@ export const load: PageServerLoad = async ({ url }) => {
 		} else {
 			result = await prisma.question.findMany({
 				where: {
-					content: {
-						contains: String(searchParams),
-						mode: 'insensitive'
-					}
+					OR: [
+						{
+							content: {
+								contains: String(searchParams),
+								mode: 'insensitive'
+							}
+						},
+						{
+							title: {
+								contains: String(searchParams),
+								mode: 'insensitive'
+							}
+						}
+					]
 				},
 				include: {
 					user: {

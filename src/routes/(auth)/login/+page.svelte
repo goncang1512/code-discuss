@@ -3,7 +3,6 @@
 	import InputFloat from '@components/fragments/InputFloat.svelte';
 	import { authClient } from '@lib/auth-client';
 	import SocialAuth from '@components/fragments/SocialAuth.svelte';
-	import InputPassword from '@components/fragments/InputPassword.svelte';
 
 	let loading = $state(false);
 	let message = $state('');

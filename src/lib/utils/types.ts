@@ -17,10 +17,11 @@ export type QuestionType = {
 	updatedAt: Date;
 	userId: string;
 	content: string;
+	title: string;
 	tags: string[];
 	upvotes: string[];
 	downvotes: string[];
-	is_accepted: boolean;
+	is_accepted?: boolean;
 };
 
 export type EnhanceFunction = (
@@ -50,6 +51,6 @@ export type EnhanceType = {
 };
 
 export type ReturnEnhanceType = {
-	result: ActionResult<Record<string, unknown> | undefined, Record<string, unknown> | undefined>;
+	result: ActionResult<Record<string, any> | undefined, Record<string, unknown> | undefined>;
 	update: (options?: { reset?: boolean; invalidateAll?: boolean }) => void;
 };

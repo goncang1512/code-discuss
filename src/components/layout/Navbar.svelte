@@ -47,7 +47,9 @@
 	];
 </script>
 
-<div class="fixed top-0 flex h-screen w-xs flex-col justify-between bg-white px-5 py-4 shadow-lg">
+<div
+	class="fixed top-0 hidden h-screen w-xs flex-col justify-between bg-white px-5 py-4 shadow-lg md:flex"
+>
 	<div class="flex h-full flex-col justify-between pl-10">
 		<div class="flex flex-col gap-2">
 			{#each links as link}

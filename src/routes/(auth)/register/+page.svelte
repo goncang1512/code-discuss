@@ -5,7 +5,6 @@
 	import { goto } from '$app/navigation';
 	import SocialAuth from '@components/fragments/SocialAuth.svelte';
 	import { ArrowLeft } from '@lucide/svelte';
-	import InputPassword from '@components/fragments/InputPassword.svelte';
 
 	let loading = $state(false);
 	let message = $state('');

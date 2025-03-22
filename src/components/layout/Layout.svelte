@@ -9,7 +9,7 @@
 		<Navbar />
 	</div>
 
-	<div class="w-full pl-[20rem]">
+	<div class="w-full pl-0 md:pl-[20rem]">
 		{@render children()}
 	</div>
 </div>

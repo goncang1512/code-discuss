@@ -1,12 +1,14 @@
 <script lang="ts">
-	import type { EnhanceType, QuestionType, ReturnEnhanceType, User } from '@lib/utils/types';
+	import type { QuestionType, User } from '@lib/utils/types';
 	import { shortTimeAgo } from '@lib/utils/time';
 	import { useSession } from '@lib/context/userContext';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { derived } from 'svelte/store';
-	import { EllipsisVertical, Trash2 } from '@lucide/svelte';
+	import { Check, EllipsisVertical, Trash2 } from '@lucide/svelte';
 	import { Popover } from 'flowbite-svelte';
+	import ButtonForm from '@components/fragments/ButtonForm.svelte';
+	import QnaServices from '@lib/services/question.services';
 
 	interface CardQuestProps {
 		question: QuestionType;
@@ -14,47 +16,18 @@
 
 	let { question: qna }: CardQuestProps = $props();
 	const user = useSession();
-
-	const handleUpvote = async ({ formElement, formData }: EnhanceType) => {
-		formData.append('user_id', $user.id);
-		formData.append('quest_id', qna.id);
-		return async ({ result, update }: ReturnEnhanceType) => {
-			if (result.type === 'success') {
-				formElement.reset();
-			}
-			update();
-		};
-	};
-
-	const handleDownVote = async ({ formElement, formData }: EnhanceType) => {
-		formData.append('user_id', $user.id);
-		formData.append('quest_id', qna.id);
-		return async ({ result, update }: ReturnEnhanceType) => {
-			if (result.type === 'success') {
-				formElement.reset();
-			}
-			update();
-		};
-	};
-
-	const handleDelete = async ({ formElement, formData }: EnhanceType) => {
-		formData.append('quest_id', qna.id);
-		return async ({ result, update }: ReturnEnhanceType) => {
-			if (result.type === 'success') {
-				formElement.reset();
-			}
-			update();
-		};
-	};
+	const quest = new QnaServices(qna, $user);
 
 	const query = derived(page, ($page) => {
 		const data = $page.url.searchParams.get('v') || '';
 		return data.split('tag:')[1];
 	});
+
+	const paragrafs = qna.content.split('\n');
 </script>
 
 <div class="flex gap-2 border-b border-gray-300 p-5 shadow-sm">
-	<div class="w-[6%] flex-none">
+	<div class="w-[10%] flex-none md:w-[6%]">
 		<img class="size-10 rounded-full" src="https://github.com/shadcn.png" alt="" />
 	</div>
 	<div class="flex-1">
@@ -63,32 +36,56 @@
 				<p class="text-sm font-semibold text-zinc-600">{qna.user.name}</p>
 				<p class="text-sm text-gray-400">{shortTimeAgo(qna.createdAt)}</p>
 			</div>
-			<button id={`popover-${qna.id}`} type="button" class="rounded-md p-1 hover:bg-gray-200">
-				<EllipsisVertical size={20} />
-			</button>
-			<Popover triggeredBy={`#popover-${qna.id}`}>
-				<form action="?/deleteQna" method="POST" use:enhance={handleDelete}>
-					<button
-						type="submit"
-						class="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-200"
+			{#if qna.user.id === $user?.id}
+				<button id={`popover-${qna.id}`} type="button" class="rounded-md p-1 hover:bg-gray-200">
+					<EllipsisVertical size={20} />
+				</button>
+				<Popover triggeredBy={`#popover-${qna.id}`}>
+					<form action="?/deleteQna" method="POST" use:enhance={quest.handleDelete}>
+						<button
+							type="submit"
+							class="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-200"
+						>
+							<Trash2 size={20} />
+							delete
+						</button>
+					</form>
+					<ButtonForm
+						useEnhance={quest.handleSolved}
+						action="/?/solvedQna"
+						method="POST"
+						classButton="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-200"
 					>
-						<Trash2 size={20} />
-						delete
-					</button>
-				</form>
-			</Popover>
+						<Check size={20} /> solved
+					</ButtonForm>
+				</Popover>
+			{/if}
 		</div>
 		<div class="border-b-2 border-gray-300 pb-2">
-			<p class="text-base">{qna.content}</p>
+			<div>
+				<div class="flex items-center gap-3">
+					<h1 class="font-semibold">{qna.title}</h1>
+					{#if qna.is_accepted}
+						<span class="rounded-md bg-[#77B255] text-white">
+							<Check size={20} />
+						</span>
+					{/if}
+				</div>
+				<div class="flex flex-col gap-2">
+					{#each paragrafs as paragraf}
+						<p class="text-base">{'  '}{paragraf}</p>
+					{/each}
+				</div>
+			</div>
 
 			<div class="flex items-center pt-2">
-				<form action="?/upvote" method="POST" use:enhance={handleUpvote}>
+				<form action="/?/upvote" method="POST" use:enhance={quest.handleUpvote}>
 					<button class={`flex gap-1 rounded-md p-1 hover:bg-gray-200`}>
 						{@render thumbLike(qna.upvotes, $user)}
 						<span>{qna.upvotes.length !== 0 ? qna.upvotes.length : ''}</span>
 					</button>
 				</form>
-				<form action="?/downVote" method="POST" use:enhance={handleDownVote}>
+				<form action="/?/downVote" method="POST" use:enhance={quest.handleDownVote}>
 					<button class="flex gap-1 rounded-md p-1 hover:bg-gray-200">
 						<span class="-scale-x-100 rotate-180">{@render thumbLike(qna.downvotes, $user)}</span>
 						<span>{qna.downvotes.length !== 0 ? qna.downvotes.length : ''}</span>
