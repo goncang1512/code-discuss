@@ -5,9 +5,9 @@ import {
 	differenceInDays
 } from 'date-fns';
 
-export function shortTimeAgo(date: string | number | Date): string {
+export function shortTimeAgo(date: string | number | Date | undefined): string {
 	const now = new Date();
-	const past = new Date(date);
+	const past = new Date(String(date));
 
 	const seconds = differenceInSeconds(now, past);
 	if (seconds < 60) return `${seconds}s`;

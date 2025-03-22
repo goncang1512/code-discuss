@@ -61,7 +61,7 @@
 		name="content"
 		rows="4"
 		class="block h-32 w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-zinc-600 focus:ring-zinc-600"
-		placeholder="Write your thoughts here..."
+		placeholder="Write your question here..."
 	></textarea>
 	<div class="flex items-center gap-3">
 		<input

@@ -35,5 +35,11 @@ export default ts.config(
 				svelteConfig
 			}
 		}
+	},
+	{
+		files: ['**/*.server.ts'],
+		rules: {
+			'@typescript-eslint/no-unused-vars': 'off'
+		}
 	}
 );

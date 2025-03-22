@@ -11,7 +11,7 @@
 	import QnaServices from '@lib/services/question.services';
 
 	interface CardQuestProps {
-		question: QuestionType;
+		question: QuestionType | null;
 	}
 
 	let { question: qna }: CardQuestProps = $props();
@@ -23,7 +23,7 @@
 		return data.split('tag:')[1];
 	});
 
-	const paragrafs = qna.content.split('\n');
+	const paragrafs = qna?.content.split('\n') || [];
 </script>
 
 <div class="flex gap-2 border-b border-gray-300 p-5 shadow-sm">
@@ -33,15 +33,15 @@
 	<div class="flex-1">
 		<div class="flex items-center justify-between pt-2">
 			<div class="flex items-center gap-2">
-				<p class="text-sm font-semibold text-zinc-600">{qna.user.name}</p>
-				<p class="text-sm text-gray-400">{shortTimeAgo(qna.createdAt)}</p>
+				<p class="text-sm font-semibold text-zinc-600">{qna?.user.name}</p>
+				<p class="text-sm text-gray-400">{shortTimeAgo(qna?.createdAt)}</p>
 			</div>
-			{#if qna.user.id === $user?.id}
-				<button id={`popover-${qna.id}`} type="button" class="rounded-md p-1 hover:bg-gray-200">
+			{#if qna?.user.id === $user?.id}
+				<button id={`popover-${qna?.id}`} type="button" class="rounded-md p-1 hover:bg-gray-200">
 					<EllipsisVertical size={20} />
 				</button>
-				<Popover triggeredBy={`#popover-${qna.id}`}>
-					<form action="?/deleteQna" method="POST" use:enhance={quest.handleDelete}>
+				<Popover triggeredBy={`#popover-${qna?.id}`}>
+					<form action="/?/deleteQna" method="POST" use:enhance={quest.handleDelete}>
 						<button
 							type="submit"
 							class="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-200"
@@ -62,10 +62,10 @@
 			{/if}
 		</div>
 		<div class="border-b-2 border-gray-300 pb-2">
-			<div>
+			<a href={`/question/${qna?.id}`}>
 				<div class="flex items-center gap-3">
-					<h1 class="font-semibold">{qna.title}</h1>
-					{#if qna.is_accepted}
+					<h1 class="font-semibold">{qna?.title}</h1>
+					{#if qna?.is_accepted}
 						<span class="rounded-md bg-[#77B255] text-white">
 							<Check size={20} />
 						</span>
@@ -76,25 +76,27 @@
 						<p class="text-base">{'  '}{paragraf}</p>
 					{/each}
 				</div>
-			</div>
+			</a>
 
 			<div class="flex items-center pt-2">
 				<form action="/?/upvote" method="POST" use:enhance={quest.handleUpvote}>
 					<button class={`flex gap-1 rounded-md p-1 hover:bg-gray-200`}>
-						{@render thumbLike(qna.upvotes, $user)}
-						<span>{qna.upvotes.length !== 0 ? qna.upvotes.length : ''}</span>
+						{@render thumbLike(qna?.upvotes ?? [], $user)}
+						<span>{qna?.upvotes.length !== 0 ? qna?.upvotes.length : ''}</span>
 					</button>
 				</form>
 				<form action="/?/downVote" method="POST" use:enhance={quest.handleDownVote}>
 					<button class="flex gap-1 rounded-md p-1 hover:bg-gray-200">
-						<span class="-scale-x-100 rotate-180">{@render thumbLike(qna.downvotes, $user)}</span>
-						<span>{qna.downvotes.length !== 0 ? qna.downvotes.length : ''}</span>
+						<span class="-scale-x-100 rotate-180"
+							>{@render thumbLike(qna?.downvotes ?? [], $user)}</span
+						>
+						<span>{qna?.downvotes.length !== 0 ? qna?.downvotes.length : ''}</span>
 					</button>
 				</form>
 			</div>
 		</div>
 		<div class="flex flex-wrap gap-2 pt-2">
-			{#each qna.tags as tag}
+			{#each qna?.tags ?? [] as tag}
 				<a
 					href={`/search?v=tag:${tag}`}
 					class={`${$query === tag && 'bg-gray-200'} rounded-md px-1 hover:bg-gray-200`}>#{tag}</a

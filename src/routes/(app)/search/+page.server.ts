@@ -62,7 +62,6 @@ export const load: PageServerLoad = async ({ url }) => {
 			message: 'Success get all data',
 			results: result
 		};
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
 		return {
 			status: false,

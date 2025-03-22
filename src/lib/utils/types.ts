@@ -54,3 +54,17 @@ export type ReturnEnhanceType = {
 	result: ActionResult<Record<string, any> | undefined, Record<string, unknown> | undefined>;
 	update: (options?: { reset?: boolean; invalidateAll?: boolean }) => void;
 };
+
+export type AnswerType = {
+	id: string;
+	content: string;
+	userId: string;
+	questionId: string;
+	is_answer: boolean;
+	upvotes: string[];
+	downvotes: string[];
+	type: string;
+	createdAt: Date;
+	updatedAt: Date;
+	user: { avatar: string | null; name: string | null; image: string | null; id: string };
+};
