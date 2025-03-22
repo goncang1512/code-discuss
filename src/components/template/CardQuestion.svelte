@@ -24,11 +24,17 @@
 	});
 
 	const paragrafs = qna?.content.split('\n') || [];
+	const avatarSrc =
+		qna?.user?.image !== 'image'
+			? qna?.user?.image
+			: qna?.user?.avatar === 'avatar'
+				? 'https://i.pinimg.com/474x/4b/58/21/4b5821d29726276fe811ce1136270236.jpg'
+				: qna?.user?.avatar;
 </script>
 
 <div class="flex gap-2 border-b border-gray-300 p-5 shadow-sm">
 	<div class="w-[10%] flex-none md:w-[6%]">
-		<img class="size-10 rounded-full" src="https://github.com/shadcn.png" alt="" />
+		<img class="size-10 rounded-full" src={avatarSrc} alt="profile_picture" />
 	</div>
 	<div class="flex-1">
 		<div class="flex items-center justify-between pt-2">

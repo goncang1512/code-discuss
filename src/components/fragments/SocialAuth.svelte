@@ -1,3 +1,14 @@
+<script lang="ts">
+	import { authClient } from '@lib/auth-client';
+
+	const signIn = async () => {
+		await authClient.signIn.social({
+			provider: 'discord',
+			callbackURL: '/profile'
+		});
+	};
+</script>
+
 <div>
 	<button
 		type="button"
@@ -22,6 +33,7 @@
 		<p>GitHub</p>
 	</button>
 	<button
+		onclick={signIn}
 		type="button"
 		aria-label="button-discord"
 		class="me-2 mb-2 flex w-full items-center justify-center gap-3 rounded-lg bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-600 focus:ring-4 focus:ring-indigo-300 focus:outline-none"

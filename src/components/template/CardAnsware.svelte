@@ -20,11 +20,17 @@
 	const quest = new AnswerServices(answer, $user);
 
 	const paragrafs = answer?.content.split('\n') || [];
+	const avatarSrc =
+		answer?.user?.image !== 'image'
+			? answer?.user?.image
+			: answer?.user?.avatar === 'avatar'
+				? 'https://i.pinimg.com/474x/4b/58/21/4b5821d29726276fe811ce1136270236.jpg'
+				: answer?.user?.avatar;
 </script>
 
 <div class="flex gap-2 border-b border-gray-300 p-5 shadow-sm">
 	<div class="w-[10%] flex-none md:w-[6%]">
-		<img class="size-10 rounded-full" src="https://github.com/shadcn.png" alt="" />
+		<img class="size-10 rounded-full" src={avatarSrc} alt="" />
 	</div>
 	<div class="flex-1">
 		<div class="flex items-center justify-between pt-2">
@@ -32,7 +38,7 @@
 				<p class="text-sm font-semibold text-zinc-600">{answer?.user?.name}</p>
 				<p class="text-sm text-gray-400">{shortTimeAgo(answer?.createdAt)}</p>
 			</div>
-			{#if $user}
+			{#if $user.id === answer?.user?.id || qna.userId === $user.id}
 				<button id={`popover-${answer?.id}`} type="button" class="rounded-md p-1 hover:bg-gray-200">
 					<EllipsisVertical size={20} />
 				</button>
