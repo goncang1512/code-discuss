@@ -68,3 +68,26 @@ export type AnswerType = {
 	updatedAt: Date;
 	user: { avatar: string | null; name: string | null; image: string | null; id: string };
 };
+
+export interface Community {
+	id: string;
+	name: string;
+	slug: string;
+	description: string | null;
+	ownerId: string;
+	visibility: 'public' | 'private';
+	createdAt: Date;
+	updatedAt: Date;
+}
+
+export interface CommunityMember {
+	id: string;
+	communityId: string;
+	userId: string;
+	role: 'owner' | 'admin' | 'member';
+	status: 'pending' | 'approved' | 'banned';
+	joinedAt: Date | null;
+	createdAt: Date;
+	updatedAt: Date;
+	community: Community;
+}

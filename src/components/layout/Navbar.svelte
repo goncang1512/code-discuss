@@ -3,6 +3,7 @@
 	import { authClient } from '@lib/auth-client';
 	import { useSession } from '@lib/context/userContext';
 	import { House, LogOut, Inbox, UsersRound, User, Search } from '@lucide/svelte';
+	import CommunitiesSide from './CommunitiesSide.svelte';
 	import { page } from '$app/stores';
 
 	$: pathname = $page.url.pathname;
@@ -47,12 +48,6 @@
 		}
 	];
 </script>
-
-<div
-	class={`${communitiesPage ? 'translate-x-0 ' : '-translate-x-[130%]'} fixed left-[88px] h-screen w-[230px] transform bg-red-500 shadow-md duration-200`}
->
-	<h1>COmmunitas</h1>
-</div>
 
 <div
 	class={`${communitiesPage ? 'w-22' : 'w-xs'} fixed top-0 hidden h-screen flex-col justify-between bg-white px-5 py-4 shadow-lg duration-200 md:flex`}
