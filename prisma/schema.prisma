@@ -81,6 +81,11 @@ model Verification {
   @@map("verification")
 }
 
+enum TypeQuestion {
+  public
+  group
+}
+
 model Question {
   id            String      @id @default(uuid())
   title         String
@@ -89,10 +94,13 @@ model Question {
   tags          String[]
   upvotes       String[]
   downvotes     String[]
+  type          TypeQuestion @default(public)
   is_accepted   Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+  communityId   String?    
 
+  community     Community?   @relation(fields: [communityId], references: [id], onDelete: Cascade)
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   answer       Answer[]
@@ -132,6 +140,7 @@ model Community {
 
   @@map("community")
   Member Member[]
+  Question Question[]
 }
 
 enum Visibility {

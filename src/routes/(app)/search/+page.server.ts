@@ -12,7 +12,8 @@ export const load: PageServerLoad = async ({ url }) => {
 				where: {
 					tags: {
 						has: query
-					}
+					},
+					type: 'public'
 				},
 				include: {
 					user: {

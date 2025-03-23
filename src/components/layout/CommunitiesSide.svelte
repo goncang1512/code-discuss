@@ -59,7 +59,7 @@
 </div>
 
 <Modal title="Create group" bind:open={defaultModal}>
-	<form action="?/createGroup" method="POST" use:enhance={handleCreateGroup}>
+	<form action="/communities?/createGroup" method="POST" use:enhance={handleCreateGroup}>
 		<div class="flex flex-col gap-3 pb-3">
 			<InputFloat name="name" required>Name</InputFloat>
 			<textarea

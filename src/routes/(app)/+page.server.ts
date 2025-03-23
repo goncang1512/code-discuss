@@ -4,6 +4,9 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
 	const data = await prisma.question.findMany({
+		where: {
+			type: 'public'
+		},
 		include: {
 			user: {
 				select: {
@@ -50,7 +53,8 @@ export const actions = {
 					title,
 					content,
 					tags: artag_content,
-					userId: user_id
+					userId: user_id,
+					type: 'public'
 				}
 			});
 

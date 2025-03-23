@@ -69,7 +69,7 @@ export type AnswerType = {
 	user: { avatar: string | null; name: string | null; image: string | null; id: string };
 };
 
-export interface Community {
+export interface CommunityType {
 	id: string;
 	name: string;
 	slug: string;
@@ -80,6 +80,10 @@ export interface Community {
 	updatedAt: Date;
 }
 
+export type CommunityTypeGroup = CommunityType & {
+	Question: QuestionType[];
+};
+
 export interface CommunityMember {
 	id: string;
 	communityId: string;
@@ -89,5 +93,5 @@ export interface CommunityMember {
 	joinedAt: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
-	community: Community;
+	community: CommunityType;
 }
