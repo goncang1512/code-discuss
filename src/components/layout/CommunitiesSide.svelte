@@ -39,7 +39,7 @@
 </script>
 
 <div
-	class={`${communitiesPage ? 'translate-x-0 ' : '-translate-x-[130%]'} fixed left-[88px] h-screen w-[230px] transform  shadow-md duration-200`}
+	class={`${communitiesPage ? 'translate-x-0 ' : '-translate-x-[130%]'} fixed left-[88px] h-screen w-[230px] transform  shadow-md duration-200 max-md:hidden`}
 >
 	<div class="flex h-full flex-col items-start justify-between py-2 pl-5">
 		<div class="flex w-full flex-col">

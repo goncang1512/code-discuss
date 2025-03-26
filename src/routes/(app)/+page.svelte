@@ -11,7 +11,7 @@
 	<LayoutDiv>
 		<AddQuestion />
 		<dir>
-			{#each data.results as item (item.id)}
+			{#each data?.results as item (item.id)}
 				<CardQuestion question={item} />
 			{/each}
 		</dir>

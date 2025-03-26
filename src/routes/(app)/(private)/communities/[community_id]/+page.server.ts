@@ -2,15 +2,19 @@ import prisma from '@lib/utils/prisma';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { auth } from '@lib/auth';
+import { pusherServer } from '@lib/pusher';
 
 export const load: PageServerLoad = async ({
 	params,
-	request
+	request,
+	url
 }: {
 	params: { community_id: string };
 	request: Request;
+	url: URL;
 }) => {
 	try {
+		const searchParams = url.searchParams.get('v');
 		const session = await auth.api.getSession({
 			headers: request.headers
 		});
@@ -60,27 +64,38 @@ export const load: PageServerLoad = async ({
 			}
 		});
 
-		const inCommunity = data?.Member.some(
-			(data) => String(data?.user.id) === String(session?.user?.id)
-		);
-
-		if (!inCommunity) {
-			throw new Error('Not in community');
+		let result;
+		if (searchParams) {
+			const query = searchParams.split('tag:')[1] || '';
+			result = await prisma.question.findMany({
+				where: {
+					tags: {
+						has: query
+					},
+					communityId: data?.id,
+					type: 'group'
+				},
+				include: {
+					user: {
+						select: {
+							id: true,
+							name: true,
+							avatar: true,
+							image: true
+						}
+					}
+				}
+			});
 		}
 
 		return {
 			status: true,
 			statusCode: 200,
 			message: 'Success get community data',
-			results: data
+			results: data,
+			question: result
 		};
 	} catch (error) {
-		if (error instanceof Error) {
-			if (error.message === 'Not in community') {
-				redirect(302, '/communities');
-			}
-		}
-
 		return {
 			status: false,
 			statusCode: 500,
@@ -117,9 +132,20 @@ export const actions = {
 					userId: user_id,
 					type: 'group',
 					communityId
+				},
+				include: {
+					user: {
+						select: {
+							id: true,
+							name: true,
+							avatar: true,
+							image: true
+						}
+					}
 				}
 			});
 
+			await pusherServer.trigger('chat-app', 'question-group', { result });
 			return {
 				status: true,
 				statusCode: 201,

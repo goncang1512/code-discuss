@@ -5,7 +5,7 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { derived } from 'svelte/store';
-	import { Check, EllipsisVertical, Trash2 } from '@lucide/svelte';
+	import { Check, EllipsisVertical, LoaderCircle, Trash2 } from '@lucide/svelte';
 	import { Popover } from 'flowbite-svelte';
 	import ButtonForm from '@components/fragments/ButtonForm.svelte';
 	import QnaServices from '@lib/services/question.services';
@@ -14,6 +14,7 @@
 		question: QuestionType | null;
 	}
 
+	let loadingDelete = $state(false);
 	let { question: qna }: CardQuestProps = $props();
 	const user = useSession();
 	const quest = new QnaServices(qna, $user);
@@ -47,13 +48,33 @@
 					<EllipsisVertical size={20} />
 				</button>
 				<Popover triggeredBy={`#popover-${qna?.id}`}>
-					<form action="/?/deleteQna" method="POST" use:enhance={quest.handleDelete}>
+					<form
+						action="/?/deleteQna"
+						method="POST"
+						use:enhance={(data) =>
+							quest.handleDelete(data, {
+								onRequest: () => {
+									loadingDelete = true;
+								},
+								onSuccess: () => {
+									loadingDelete = false;
+								},
+								onError: () => {
+									loadingDelete = false;
+								}
+							})}
+					>
 						<button
+							disabled={loadingDelete}
 							type="submit"
-							class="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-200"
+							class="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-200 disabled:cursor-default"
 						>
-							<Trash2 size={20} />
-							delete
+							{#if loadingDelete}
+								<LoaderCircle size={20} class="animate-spin" />
+							{:else}
+								<Trash2 size={20} />
+							{/if}
+							{loadingDelete ? 'loading' : 'delete'}
 						</button>
 					</form>
 					<ButtonForm
@@ -103,8 +124,11 @@
 		</div>
 		<div class="flex flex-wrap gap-2 pt-2">
 			{#each qna?.tags ?? [] as tag}
+				{@const tagSearch = $page.url.pathname.startsWith('/communities')
+					? `?v=tag:${tag}`
+					: `/search?v=tag:${tag}`}
 				<a
-					href={`/search?v=tag:${tag}`}
+					href={`${tagSearch}`}
 					class={`${$query === tag && 'bg-gray-200'} rounded-md px-1 hover:bg-gray-200`}>#{tag}</a
 				>
 			{/each}

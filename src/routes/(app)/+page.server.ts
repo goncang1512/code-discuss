@@ -1,6 +1,7 @@
 import prisma from '@lib/utils/prisma';
 import { fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { pusherServer } from '@lib/pusher';
 
 export const load: PageServerLoad = async () => {
 	const data = await prisma.question.findMany({
@@ -18,7 +19,7 @@ export const load: PageServerLoad = async () => {
 			}
 		},
 		orderBy: {
-			createdAt: 'desc' // Mengurutkan dari yang paling lama ke terbaru
+			createdAt: 'desc'
 		}
 	});
 
@@ -55,6 +56,16 @@ export const actions = {
 					tags: artag_content,
 					userId: user_id,
 					type: 'public'
+				},
+				include: {
+					user: {
+						select: {
+							id: true,
+							name: true,
+							avatar: true,
+							image: true
+						}
+					}
 				}
 			});
 
@@ -182,6 +193,8 @@ export const actions = {
 					id: quest_id
 				}
 			});
+
+			await pusherServer.trigger('chat-app', 'delete-question', { result: { id: result.id } });
 			return {
 				status: true,
 				statusCode: 200,

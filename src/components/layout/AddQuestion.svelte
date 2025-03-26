@@ -3,8 +3,9 @@
 	import { useSession } from '@lib/context/userContext';
 	import type { EnhanceType, ReturnEnhanceType } from '@lib/utils/types';
 	import InputFloat from '@components/fragments/InputFloat.svelte';
-	import { X } from '@lucide/svelte';
-	import { Button } from 'flowbite-svelte';
+	import { CircleX, X } from '@lucide/svelte';
+	import { Button, Toast } from 'flowbite-svelte';
+	import { slide } from 'svelte/transition';
 
 	const user = useSession();
 
@@ -21,6 +22,11 @@
 	const handleEnhance = async ({ formElement, formData }: EnhanceType) => {
 		loading = true;
 		message = '';
+		if (formData.get('content') === '') {
+			loading = false;
+			showToastError('Not have content');
+			return;
+		}
 		formData.append('tag_content', JSON.stringify(tags));
 		formData.append('user_id', $user?.id);
 		return async ({ result, update }: ReturnEnhanceType) => {
@@ -37,14 +43,50 @@
 		};
 	};
 
+	let toastStatus = $state(false);
+	let messageError = $state('');
+	let counter = 6;
+
 	function addTag() {
-		if (tagInput.trim() !== '') {
-			tags.push(tagInput);
-			tagInput = '';
-			inputRef.focus(); // Fokus kembali ke input setelah tombol diklik
+		const trimmedInput = tagInput.trim();
+
+		if (trimmedInput.includes(' ')) {
+			showToastError('Space not allowed');
+			return;
 		}
+
+		tags.push(trimmedInput);
+		tagInput = '';
+		inputRef.focus();
+	}
+
+	function showToastError(message: string) {
+		toastStatus = true;
+		messageError = message;
+		counter = 6;
+
+		const timeout = setInterval(() => {
+			counter--;
+			if (counter <= 0) {
+				toastStatus = false;
+				clearInterval(timeout);
+			}
+		}, 1000);
 	}
 </script>
+
+<Toast
+	color="red"
+	class="fixed right-3 bottom-3 rounded-md border border-gray-200"
+	transition={slide}
+	bind:toastStatus
+>
+	<svelte:fragment slot="icon">
+		<CircleX class="size-5" />
+		<span class="sr-only">Error icon</span>
+	</svelte:fragment>
+	{messageError}
+</Toast>
 
 {#if message}
 	<p class="pt-5 text-center text-sm text-red-500 italic">{message}</p>

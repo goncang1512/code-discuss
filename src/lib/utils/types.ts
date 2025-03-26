@@ -1,4 +1,5 @@
 import type { auth } from '@lib/auth';
+import type { $Enums } from '@prisma/client';
 import type { ActionResult } from '@sveltejs/kit';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -18,10 +19,12 @@ export type QuestionType = {
 	userId: string;
 	content: string;
 	title: string;
+	communityId: string | null;
+	type: $Enums.TypeQuestion;
 	tags: string[];
 	upvotes: string[];
 	downvotes: string[];
-	is_accepted?: boolean;
+	is_accepted: boolean;
 };
 
 export type EnhanceFunction = (
@@ -75,7 +78,7 @@ export interface CommunityType {
 	slug: string;
 	description: string | null;
 	ownerId: string;
-	visibility: 'public' | 'private';
+	visibility: $Enums.Visibility;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -88,8 +91,8 @@ export interface CommunityMember {
 	id: string;
 	communityId: string;
 	userId: string;
-	role: 'owner' | 'admin' | 'member';
-	status: 'pending' | 'approved' | 'banned';
+	role: $Enums.Role;
+	status: $Enums.StatusMember;
 	joinedAt: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
