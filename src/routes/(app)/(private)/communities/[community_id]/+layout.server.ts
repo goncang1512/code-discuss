@@ -19,7 +19,10 @@ export const load: LayoutServerLoad = async ({ url, params, request }) => {
 					role: true,
 					user: {
 						select: {
-							id: true
+							id: true,
+							name: true,
+							avatar: true,
+							image: true
 						}
 					}
 				}
@@ -34,7 +37,15 @@ export const load: LayoutServerLoad = async ({ url, params, request }) => {
 	const pathname = url.pathname;
 	const pathParts = pathname.split('/'); // Membagi path berdasarkan '/'
 	const thirdSegment = pathParts[3];
-	if (!inCommunity && thirdSegment !== '/invite') {
+
+	if (!inCommunity && thirdSegment !== 'invite') {
 		throw redirect(302, '/communities');
 	}
+
+	return {
+		status: true,
+		statusCode: 200,
+		message: 'Success get data member',
+		results: data
+	};
 };

@@ -6,18 +6,13 @@ import { pusherServer } from '@lib/pusher';
 
 export const load: PageServerLoad = async ({
 	params,
-	request,
 	url
 }: {
 	params: { community_id: string };
-	request: Request;
 	url: URL;
 }) => {
 	try {
 		const searchParams = url.searchParams.get('v');
-		const session = await auth.api.getSession({
-			headers: request.headers
-		});
 
 		const data = await prisma.community.findFirst({
 			where: {
@@ -37,28 +32,6 @@ export const load: PageServerLoad = async ({
 					},
 					orderBy: {
 						createdAt: 'desc'
-					}
-				},
-				Member: {
-					orderBy: [
-						{
-							role: 'asc'
-						},
-						{
-							createdAt: 'asc'
-						}
-					],
-					select: {
-						id: true,
-						role: true,
-						user: {
-							select: {
-								id: true,
-								name: true,
-								avatar: true,
-								image: true
-							}
-						}
 					}
 				}
 			}
@@ -152,6 +125,28 @@ export const actions = {
 				message: 'Success question in group',
 				results: result
 			};
+		} catch (error) {
+			return {
+				status: false,
+				statusCode: 500,
+				message: 'Internal Server Error',
+				results: null
+			};
+		}
+	},
+	leaveGroup: async ({ request }) => {
+		const data = await request.formData();
+		const community_id = data.get('community_id') as string;
+		const user_id = data.get('user_id') as string;
+		try {
+			await prisma.member.deleteMany({
+				where: {
+					communityId: community_id,
+					userId: user_id
+				}
+			});
+
+			return redirect(307, '/communities');
 		} catch (error) {
 			return {
 				status: false,

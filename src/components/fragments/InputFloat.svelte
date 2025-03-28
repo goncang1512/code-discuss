@@ -28,7 +28,7 @@
 			{/if}
 		</button>
 		<input
-			class="peer block w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-zinc-600 focus:ring-zinc-600"
+			class="peer block w-full rounded-lg border-2 border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-zinc-600 focus:ring-zinc-600"
 			placeholder=" "
 			type={seePassword ? 'text' : 'password'}
 			{...props}
@@ -46,7 +46,7 @@
 {:else}
 	<div class="relative">
 		<input
-			class="peer block w-full rounded-lg border-2 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-zinc-600 focus:ring-zinc-600"
+			class="peer block w-full rounded-lg border-2 border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-zinc-600 focus:ring-zinc-600"
 			placeholder=" "
 			{...props}
 			id={name}

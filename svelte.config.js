@@ -14,7 +14,8 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			'@lib/*': './src/lib/*',
-			'@components/*': './src/components/*'
+			'@components/*': './src/components/*',
+			'mogora-ui': './src/components/fragments/UI/main.ts'
 		}
 	}
 };

@@ -12,6 +12,7 @@
 		answer: AnswerType | null;
 		quest: {
 			userId: string;
+			id: string;
 		};
 	}
 
@@ -46,7 +47,7 @@
 					{#if answer?.user?.id === $user?.id}
 						<ButtonForm
 							method="POST"
-							action="?/deleteQna"
+							action={`/question/${qna?.id}?/deleteQna`}
 							useEnhance={quest.handleDelete}
 							classButton="flex w-full items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-200"
 						>
@@ -56,7 +57,7 @@
 					{#if qna?.userId === $user?.id}
 						<ButtonForm
 							useEnhance={quest.handleSolved}
-							action="?/solvedQna"
+							action={`/question/${qna?.id}?/solvedQna`}
 							method="POST"
 							classButton="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-200"
 						>
@@ -74,13 +75,21 @@
 			</div>
 
 			<div class="flex items-center pt-2">
-				<form action="?/upvote" method="POST" use:enhance={quest.handleUpvote}>
+				<form
+					action={`/question/${qna?.id}?/upvote`}
+					method="POST"
+					use:enhance={quest.handleUpvote}
+				>
 					<button class={`flex gap-1 rounded-md p-1 hover:bg-gray-200`}>
 						{@render thumbLike(answer?.upvotes ?? [], $user)}
 						<span>{answer?.upvotes.length !== 0 ? answer?.upvotes.length : ''}</span>
 					</button>
 				</form>
-				<form action="?/downVote" method="POST" use:enhance={quest.handleDownVote}>
+				<form
+					action={`/question/${qna.id}?/downVote`}
+					method="POST"
+					use:enhance={quest.handleDownVote}
+				>
 					<button class="flex gap-1 rounded-md p-1 hover:bg-gray-200">
 						<span class="-scale-x-100 rotate-180"
 							>{@render thumbLike(answer?.downvotes ?? [], $user)}</span

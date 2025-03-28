@@ -1,23 +1,17 @@
 <script lang="ts">
-	import LayoutDiv from '@components/template/LayoutDiv.svelte';
-	import type { PageProps } from './$types';
 	import CardQuestion from '@components/template/CardQuestion.svelte';
-	import { error } from '@sveltejs/kit';
-	import type { EnhanceType, ReturnEnhanceType } from '@lib/utils/types';
-	import { useSession } from '@lib/context/userContext';
-	import { enhance } from '$app/forms';
-	import { Button } from 'flowbite-svelte';
 	import CardAnswer from '@components/template/CardAnsware.svelte';
+	import type { PageProps } from './$types';
+	import { Button } from 'flowbite-svelte';
+	import { useSession } from '@lib/context/userContext';
+	import type { EnhanceType, ReturnEnhanceType } from '@lib/utils/types';
+	import { enhance } from '$app/forms';
 
 	let { data }: PageProps = $props();
 	const user = useSession();
-
-	if (!data?.results) {
-		throw error(404, 'Data not found');
-	}
-
+	let message = $state('');
 	let loading = $state(false);
-	let message = $state();
+
 	const handleEnhance = async ({ formElement, formData }: EnhanceType) => {
 		loading = true;
 		message = '';
@@ -25,7 +19,7 @@
 		formData.append('quest_id', String(data?.results?.id));
 		return async ({ result, update }: ReturnEnhanceType) => {
 			if (result.type === 'failure') {
-				message = result.data?.message || '';
+				message = String(result.data?.message || '');
 			}
 
 			if (result.type === 'success') {
@@ -37,15 +31,15 @@
 	};
 </script>
 
-<LayoutDiv>
+<div>
 	<CardQuestion question={data?.results} />
 	{#if message}
 		<p class="pt-5 text-center text-sm text-red-500 italic">{message}</p>
 	{/if}
 	<form
-		method="POST"
-		action="?/answer"
 		use:enhance={handleEnhance}
+		method="POST"
+		action={`/question/${data?.results?.id}?/answer`}
 		class="flex flex-col gap-2 border-b border-gray-200 p-4"
 	>
 		<textarea
@@ -65,4 +59,4 @@
 			quest={{ userId: String(data?.results?.userId), id: String(data?.results?.id) }}
 		/>
 	{/each}
-</LayoutDiv>
+</div>

@@ -31,6 +31,10 @@
 			: qna?.user?.avatar === 'avatar'
 				? 'https://i.pinimg.com/474x/4b/58/21/4b5821d29726276fe811ce1136270236.jpg'
 				: qna?.user?.avatar;
+
+	const tagSearch = $page.url.pathname.startsWith('/communities')
+		? `${$page.url.pathname}/question/${qna?.id}`
+		: `/question/${qna?.id}`;
 </script>
 
 <div class="flex gap-2 border-b border-gray-300 p-5 shadow-sm">
@@ -89,7 +93,7 @@
 			{/if}
 		</div>
 		<div class="border-b-2 border-gray-300 pb-2">
-			<a href={`/question/${qna?.id}`}>
+			<a href={tagSearch}>
 				<div class="flex items-center gap-3">
 					<h1 class="font-semibold">{qna?.title}</h1>
 					{#if qna?.is_accepted}
