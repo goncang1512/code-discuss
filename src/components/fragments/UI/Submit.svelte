@@ -2,10 +2,10 @@
 	import { enhance } from '$app/forms';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { Snippet } from 'svelte';
-	import type { HTMLAttributes } from 'svelte/elements';
+	import type { HTMLFormAttributes } from 'svelte/elements';
 	import { twMerge } from 'tailwind-merge';
 
-	interface ButtonFormProps extends HTMLAttributes<HTMLFormElement> {
+	interface ButtonFormProps extends HTMLFormAttributes {
 		children: Snippet;
 		classButton?: string;
 		useEnhance?: SubmitFunction<

@@ -7,7 +7,7 @@
 	import { derived } from 'svelte/store';
 	import { Check, EllipsisVertical, LoaderCircle, Trash2 } from '@lucide/svelte';
 	import { Popover } from 'flowbite-svelte';
-	import ButtonForm from '@components/fragments/ButtonForm.svelte';
+	import { Submit } from 'mogora-ui';
 	import QnaServices from '@lib/services/question.services';
 
 	interface CardQuestProps {
@@ -81,14 +81,14 @@
 							{loadingDelete ? 'loading' : 'delete'}
 						</button>
 					</form>
-					<ButtonForm
+					<Submit
 						useEnhance={quest.handleSolved}
 						action="/?/solvedQna"
 						method="POST"
 						classButton="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-200"
 					>
 						<Check size={20} /> solved
-					</ButtonForm>
+					</Submit>
 				</Popover>
 			{/if}
 		</div>

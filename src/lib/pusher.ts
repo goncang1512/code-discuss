@@ -6,5 +6,6 @@ export const pusherServer = new PusherServer({
 	appId: PUSHER_APP_ID,
 	key: PUSHER_KEY,
 	secret: PUSHER_SECRET,
-	cluster: PUSHER_CLUSTER
+	cluster: PUSHER_CLUSTER,
+	useTLS: true
 });

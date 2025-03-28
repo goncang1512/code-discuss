@@ -3,12 +3,13 @@
 	import { PUBLIC_BETTER_AUTH_URL } from '$env/static/public';
 	import type { EnhanceType, ReturnEnhanceType } from '@lib/utils/types';
 	import { CircleCheck, LogOut } from '@lucide/svelte';
-	import ButtonForm from '@components/fragments/ButtonForm.svelte';
-	import { useSession } from '@lib/context/userContext';
+	import { Submit } from 'mogora-ui';
+	import { getUserOnline, useSession } from '@lib/context/userContext';
 	import { fly } from 'svelte/transition';
 
 	let { data, toastStatus }: { data: any; toastStatus: boolean } = $props();
 	const user = useSession();
+	const { users } = getUserOnline();
 </script>
 
 <div
@@ -37,7 +38,12 @@
 			<div class="flex w-full items-center gap-1 border-b border-gray-300 py-2">
 				<img class="size-10 rounded-full" src={avatarScr} alt="" />
 				<div class="flex flex-col leading-4">
-					<h1 class="font-medium">{member.user?.name}</h1>
+					<div class="flex items-center gap-2">
+						<div
+							class={`h-2 w-2 rounded-full ${$users.includes(member?.user?.id) ? 'bg-green-500' : 'bg-red-500'}`}
+						></div>
+						<h1 class="font-medium">{member.user?.name}</h1>
+					</div>
 					<p class="text-sm text-gray-400 capitalize">{member.role}</p>
 				</div>
 			</div>
@@ -63,7 +69,7 @@
 					});
 			}}>invite to group</Button
 		>
-		<ButtonForm
+		<Submit
 			useEnhance={({ formElement, formData }: EnhanceType) => {
 				formData.append('user_id', String($user?.id));
 				formData.append('community_id', String(data?.results?.id));
@@ -74,7 +80,7 @@
 			}}
 			action={`?/leaveGroup`}
 			method="POST"
-			classButton="bg-red-500 px-2 py-2 h-full w-full rounded-md"><LogOut size={20} /></ButtonForm
+			classButton="bg-red-500 px-2 py-2 h-full w-full rounded-md"><LogOut size={20} /></Submit
 		>
 	</div>
 </div>

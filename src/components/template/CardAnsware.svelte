@@ -5,8 +5,8 @@
 	import { enhance } from '$app/forms';
 	import { Check, EllipsisVertical, Trash2 } from '@lucide/svelte';
 	import { Popover } from 'flowbite-svelte';
-	import ButtonForm from '@components/fragments/ButtonForm.svelte';
 	import AnswerServices from '@lib/services/answer.services';
+	import { Submit } from 'mogora-ui';
 
 	interface CardAnswerProps {
 		answer: AnswerType | null;
@@ -45,24 +45,24 @@
 				</button>
 				<Popover triggeredBy={`#popover-${answer?.id}`}>
 					{#if answer?.user?.id === $user?.id}
-						<ButtonForm
+						<Submit
 							method="POST"
 							action={`/question/${qna?.id}?/deleteQna`}
 							useEnhance={quest.handleDelete}
 							classButton="flex w-full items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-200"
 						>
 							<Trash2 size={20} /> delete
-						</ButtonForm>
+						</Submit>
 					{/if}
 					{#if qna?.userId === $user?.id}
-						<ButtonForm
+						<Submit
 							useEnhance={quest.handleSolved}
 							action={`/question/${qna?.id}?/solvedQna`}
 							method="POST"
 							classButton="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-200"
 						>
 							<Check size={20} /> the answer
-						</ButtonForm>
+						</Submit>
 					{/if}
 				</Popover>
 			{/if}

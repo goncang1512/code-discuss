@@ -53,7 +53,7 @@
 		</div>
 		<button
 			onclick={() => (defaultModal = true)}
-			class="rounded-md bg-zinc-700 px-3 py-1 text-white">Default modal</button
+			class="rounded-md bg-zinc-700 px-3 py-1 text-white">Create Group</button
 		>
 	</div>
 </div>
